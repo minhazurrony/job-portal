@@ -1,16 +1,9 @@
-import express, { Request, Response } from "express";
-import { query } from "../db";
+import express from "express";
+import { getJobs } from "../controllers/jobs";
+import { verifyToken } from "../middlewares";
 
 const router = express.Router();
 
-router.get("/jobs", async (req: Request, res: Response) => {
-  try {
-    const result = await query("SELECT * from jobs");
-    res.status(200).json({ data: result?.rows });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Database connection failed");
-  }
-});
+router.get("/jobs", verifyToken, getJobs);
 
 export default router;
