@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import jobsRoutes from "./routes/jobs";
+import cors from "cors";
 
 //For env File
 dotenv.config();
@@ -11,6 +12,7 @@ const port = process.env.PORT || 8000;
 
 // Middleware
 app.use(express.json());
+app.use(cors());
 
 app.use("/api", authRoutes);
 app.use("/api", jobsRoutes);
