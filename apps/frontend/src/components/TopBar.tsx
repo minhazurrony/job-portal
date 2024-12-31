@@ -3,7 +3,8 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Button } from "@mui/material";
+import { Button, Link } from "@mui/material";
+import { ROUTES } from "../routes";
 
 export const TopBar: React.FC = () => {
   return (
@@ -11,8 +12,11 @@ export const TopBar: React.FC = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Job Portal
+            <Link color="inherit" href={ROUTES.home} underline="hover">
+              Job Portal
+            </Link>
           </Typography>
+
           <Button color="inherit">Logout</Button>
         </Toolbar>
       </AppBar>
