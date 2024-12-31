@@ -7,6 +7,9 @@ import { Button, Link } from "@mui/material";
 import { ROUTES } from "../routes";
 
 export const TopBar: React.FC = () => {
+  const handleLogOut = () => {
+    window.localStorage.removeItem("access_token");
+  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -17,7 +20,9 @@ export const TopBar: React.FC = () => {
             </Link>
           </Typography>
 
-          <Button color="inherit">Logout</Button>
+          <Button color="inherit" onClick={handleLogOut}>
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>

@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Home, JobDetails, SignIn, SignUp } from "../pages";
+import { PrivateRoute } from "../components";
 
 export const ROUTES = {
   home: "/",
@@ -20,7 +21,11 @@ export const router = createBrowserRouter([
   },
   {
     path: ROUTES.home,
-    element: <Home />,
+    element: (
+      <PrivateRoute>
+        <Home />
+      </PrivateRoute>
+    ),
   },
   {
     path: ROUTES.jobDetails,
