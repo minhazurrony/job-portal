@@ -3,8 +3,10 @@ import { query } from "../../db";
 
 export const getJobs = async (req: Request, res: Response) => {
   try {
-    // Select all jobs along with their category details
-    const result = await query(`
+    const { id } = req.query; // Extract `id` from query parameters
+
+    // Base query to get jobs along with their category details
+    let queryText = `
       SELECT 
         jobs.id, 
         jobs.designation, 
@@ -21,8 +23,17 @@ export const getJobs = async (req: Request, res: Response) => {
         jobs.company, 
         categories.name AS category_name
       FROM jobs
-      JOIN categories ON jobs.category_id = categories.id;
-    `);
+      JOIN categories ON jobs.category_id = categories.id
+    `;
+
+    // Add a WHERE clause if `id` is provided
+    const queryParams: any[] = [];
+    if (id) {
+      queryText += ` WHERE jobs.id = $1`;
+      queryParams.push(id);
+    }
+
+    const result = await query(queryText, queryParams);
 
     // Check if jobs exist
     if (result.rows.length === 0) {

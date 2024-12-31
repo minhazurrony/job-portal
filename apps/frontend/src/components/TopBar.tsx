@@ -5,10 +5,13 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Button, Link } from "@mui/material";
 import { ROUTES } from "../routes";
+import { useNavigate } from "react-router-dom";
 
 export const TopBar: React.FC = () => {
+  const navigate = useNavigate();
   const handleLogOut = () => {
     window.localStorage.removeItem("access_token");
+    navigate(ROUTES.signIn);
   };
   return (
     <Box sx={{ flexGrow: 1 }}>
