@@ -1,0 +1,15 @@
+{
+  "name": "job-portal",
+  "version": "1.0.0",
+  "description": "full-stack job portal app build with react and express",
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend dev",
+    "dev": "pnpm -r dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Minhazur Rahman",
+  "license": "ISC",
+  "packageManager": "pnpm@9.14.2"
+}
