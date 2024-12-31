@@ -8,12 +8,13 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { Link } from "react-router-dom";
-import { Layout } from "../components";
+import { AddNewPost, Layout } from "../components";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { apiRoutes } from "../constants/apiRoutes";
 
 export const Home: React.FC = () => {
+  const [openModal, setOpenModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [jobs, setJobs] = useState([]);
 
@@ -46,9 +47,11 @@ export const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchCategories();
-    fetchJobs();
-  }, []);
+    if (!openModal) {
+      fetchCategories();
+      fetchJobs();
+    }
+  }, [openModal]);
 
   // Group jobs by categories
   const groupJobsByCategory = useMemo(() => {
@@ -97,7 +100,7 @@ export const Home: React.FC = () => {
           display: "flex",
           justifyContent: "center",
         }}>
-        <Button variant="contained">Publish New Job</Button>
+        <AddNewPost open={openModal} setOpen={setOpenModal} />
       </Box>
       {groupJobsByCategory.map((category) => {
         return (
