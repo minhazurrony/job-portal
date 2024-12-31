@@ -60,6 +60,22 @@ export const Home: React.FC = () => {
     return grouped;
   }, [jobs, categories]);
 
+  const handleDeleteJob = async (jobId: string) => {
+    const url = `${import.meta.env.VITE_BACKEND_URL}${apiRoutes.jobs}`;
+    const res = await axios.delete(url, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+      data: {
+        jobId,
+      },
+    });
+
+    if (res.status === 200) {
+      fetchJobs();
+    }
+  };
+
   return (
     <Layout>
       <Box style={{ marginTop: 20, marginBottom: 32 }} textAlign={"center"}>
@@ -122,7 +138,11 @@ export const Home: React.FC = () => {
                             View
                           </Button>
                         </Link>
-                        <Button variant="outlined" size="small" color="error">
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          color="error"
+                          onClick={() => handleDeleteJob(opening.id)}>
                           Delete
                         </Button>
                       </Box>
