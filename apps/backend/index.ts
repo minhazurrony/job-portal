@@ -1,5 +1,7 @@
-import express, { Request, Response, Application } from "express";
+import express, { Application } from "express";
 import dotenv from "dotenv";
+import authRoutes from "./routes/auth";
+import jobsRoutes from "./routes/jobs";
 
 //For env File
 dotenv.config();
@@ -7,8 +9,16 @@ dotenv.config();
 const app: Application = express();
 const port = process.env.PORT || 8000;
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to Express & TypeScript Server");
+// Middleware
+app.use(express.json());
+
+app.use("/api", authRoutes);
+app.use("/api", jobsRoutes);
+
+// Error handling middleware (optional)
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error(err.stack);
+  res.status(500).send("Something went wrong!");
 });
 
 app.listen(port, () => {
