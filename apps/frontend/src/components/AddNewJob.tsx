@@ -9,7 +9,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { Autocomplete } from "@mui/material";
 import { useEffect, useState } from "react";
 import { apiRoutes } from "../constants/apiRoutes";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { useNotification } from "../contexts/NotificationContext";
 
 type AddNewPostProps = {
   open: boolean;
@@ -20,6 +21,8 @@ export const AddNewPost: React.FC<AddNewPostProps> = ({ open, setOpen }) => {
   const [categories, setCategories] = useState([]);
 
   const access_token = window.localStorage.getItem("access_token");
+
+  const { showNotification } = useNotification();
 
   const fetchCategories = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}${apiRoutes.categories}`;
@@ -93,11 +96,14 @@ export const AddNewPost: React.FC<AddNewPostProps> = ({ open, setOpen }) => {
 
       // Handle success response
       if (res.status === 201) {
+        showNotification("Job added successfully", "success");
         handleClose(); // Close form or modal after successful submission
       }
     } catch (error) {
-      console.error("Error publishing post:", error);
-      // Handle error appropriately, e.g., show an error message to the user
+      console.error(error);
+      if (error instanceof AxiosError) {
+        showNotification(error?.response?.data?.error, "error");
+      }
     }
   };
 
