@@ -8,6 +8,10 @@
 
 **Deployed Link:** [Job-Portal](https://job-portal-xi-indol.vercel.app/)
 
+**Test login credentials:** 
+email: test@gmail.com
+password: Test123456789
+
 ## Improvement areas:
 - used inline styles most of the placed to just speed up the development time, if i get enough time then i would use separate stylesheet.
 - frontend input validation not implement due to lack of time.
