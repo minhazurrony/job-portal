@@ -13,15 +13,19 @@ import {
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../routes";
 import { apiRoutes } from "../constants/apiRoutes";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { useNotification } from "../contexts/NotificationContext";
 
 export const SignIn: React.FC = () => {
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
   });
+
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   const handleInputChange = (e: any) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
@@ -30,16 +34,24 @@ export const SignIn: React.FC = () => {
   const handleSubmit = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}${apiRoutes.signIn}`;
     try {
+      setIsLoading(true);
       const response = await axios.post(url, { ...formValues });
       if (response.status === 200) {
-        navigate(ROUTES.home);
+        showNotification("Successfully signed in", "success");
         window.localStorage.setItem(
           "access_token",
           response?.data?.data?.access_token
         );
+
+        navigate(ROUTES.home);
       }
     } catch (error) {
       console.error(error);
+      if (error instanceof AxiosError) {
+        showNotification(error?.response?.data?.error, "error");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,7 +61,7 @@ export const SignIn: React.FC = () => {
   };
 
   const checkDisabled = () => {
-    if (!formValues.email || !formValues.password) {
+    if (!formValues.email || !formValues.password || isLoading) {
       return true;
     }
     return false;
@@ -101,7 +113,7 @@ export const SignIn: React.FC = () => {
             variant="contained"
             onClick={handleSubmit}
             disabled={checkDisabled()}>
-            Sign In
+            {isLoading ? "Loading..." : "Sign In"}
           </Button>
         </FormControl>
 

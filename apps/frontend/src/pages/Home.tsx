@@ -55,10 +55,10 @@ export const Home: React.FC = () => {
 
   // Group jobs by categories
   const groupJobsByCategory = useMemo(() => {
-    const grouped = categories.map((category: any) => ({
+    const grouped = categories?.map((category: any) => ({
       id: category.id,
       name: category.name,
-      openings: jobs.filter((job: any) => job.category_name === category.name),
+      openings: jobs?.filter((job: any) => job.category_name === category.name),
     }));
     return grouped;
   }, [jobs, categories]);
