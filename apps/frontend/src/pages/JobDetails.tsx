@@ -1,36 +1,118 @@
 import React, { useEffect, useState } from "react";
 import { Layout } from "../components";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Skeleton, Typography } from "@mui/material";
 import { apiRoutes } from "../constants/apiRoutes";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useNotification } from "../contexts/NotificationContext";
 
 export const JobDetails: React.FC = () => {
   let { jobId } = useParams();
   const navigate = useNavigate();
 
   const [jobs, setJobs] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const access_token = window.localStorage.getItem("access_token");
+
+  const { showNotification } = useNotification();
 
   const fetchJobs = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}${
       apiRoutes.jobs
     }?id=${jobId}`;
-    const res = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-    });
 
-    if (res.status === 200) {
-      setJobs(res?.data?.data);
+    try {
+      setIsLoading(true);
+      const res = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      });
+
+      if (res.status === 200) {
+        setJobs(res?.data?.data);
+      }
+    } catch (error) {
+      console.error(error);
+      if (error instanceof AxiosError) {
+        showNotification(error?.response?.data?.error, "error");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchJobs();
   }, [jobId]);
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+        <Skeleton
+          variant="rounded"
+          width={"100%"}
+          height={60}
+          style={{ marginTop: 24 }}
+        />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
