@@ -12,17 +12,21 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../routes";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { apiRoutes } from "../constants/apiRoutes";
+import { useNotification } from "../contexts/NotificationContext";
 
 export const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
 
   const [formValues, setFormValues] = useState({
     name: "",
     email: "",
     password: "",
   });
+
+  const [isLoading, setIsLoading] = useState<Boolean>(false);
 
   const handleInputChange = (e: any) => {
     setFormValues({ ...formValues, [e.target.name]: e.target.value });
@@ -31,12 +35,19 @@ export const SignUp: React.FC = () => {
   const handleSubmit = async () => {
     const url = `${import.meta.env.VITE_BACKEND_URL}${apiRoutes.signUp}`;
     try {
+      setIsLoading(true);
       const response = await axios.post(url, { ...formValues });
       if (response.status === 201) {
         navigate(ROUTES.signIn);
+        showNotification("Successfully signed up", "error");
       }
     } catch (error) {
       console.error(error);
+      if (error instanceof AxiosError) {
+        showNotification(error?.response?.data?.error, "error");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,7 +57,12 @@ export const SignUp: React.FC = () => {
   };
 
   const checkDisabled = () => {
-    if (!formValues.name || !formValues.email || !formValues.password) {
+    if (
+      !formValues.name ||
+      !formValues.email ||
+      !formValues.password ||
+      isLoading
+    ) {
       return true;
     }
     return false;
@@ -107,7 +123,7 @@ export const SignUp: React.FC = () => {
             variant="contained"
             onClick={handleSubmit}
             disabled={checkDisabled()}>
-            Sign Up
+            {isLoading ? "Loading..." : "Sign Up"}
           </Button>
         </FormControl>
 
